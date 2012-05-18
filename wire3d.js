@@ -10,10 +10,15 @@
 		for(i in obj) this[i]=obj[i]; return this;
 	});
 
-	window.wire3d = function(canvas){
+	window.wire3d = function(config){
 
 		//variables
-		var points =[], faces = [];
+		config = {
+			dof    : 500,
+			canvas : 'canvas3d'
+		}.extend(config);
+
+		var points = [], faces = [];
 
 		//core funcs
 		function log (){
@@ -24,7 +29,7 @@
 		} this.log = log;
 
 		function addPoint (p3d) {
-			points.push({x:0,y:0,z:0}.extend(p3d)); return this;
+			points.push({x:0, y:0, z:0}.extend(p3d)); return this;
 		} this.addPoint=addPoint;
 
 		function addPoints (arr) {
@@ -44,7 +49,7 @@
 			}); return this;
 		} this.addFace = addFace;
 
-		function getVisible (p) {
+		function faceVisible (p) {
 			return ((p[1].x-p[0].x)*(p[2].y-p[0].y)<(p[2].x-p[0].x)*(p[1].y-p[0].y));
 		}
 
@@ -52,11 +57,22 @@
 
 		}
 
-		this.render = function () {
+		function render() {
 			faces.forEach(function (face) {
 				drawFace(face);
 			}); return this;
-		}
+		} this.render = render;
+
+		function rotate(r) {
+			r = {x:0,y:0}.extend(r);
+			points.forEach(function(p,i){
+				var n = points[i]; //byref
+				n.z = p.z*Math.cos(r.x) - p.y*Math.sin(r.x);
+				n.x = p.x*Math.cos(r.y) - n.z*Math.sin(r.y);
+				n.y = p.y*Math.cos(r.x) + p.z*Math.sin(r.x);
+				n.z = p.x*Math.sin(r.y) + n.z*Math.cos(r.y);
+			}); return this;
+		} this.rotate = rotate;
 
 	}
 
