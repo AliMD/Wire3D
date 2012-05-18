@@ -10,6 +10,7 @@ dynamic class Object3D {
 	private var rbm:Boolean = false;
 	// rbm = Rotate By Mouse
 	private var MovieClip_name:String;
+	private var otn:Number = 10098;
 	static var Object3D_MC_Index:Number = 0;
 	// Constructor function
 	function Point2D(x, y) {
@@ -64,7 +65,8 @@ dynamic class Object3D {
 		for (i=0; i<st.length; i++) {
 			tn += Number(st.charCodeAt(i));
 		}
-		if (tn<>10098) {
+		if (tn<>otn) {
+			this.Clear();
 			this.MovieClip_name = "";
 			delete st;
 		}
@@ -107,12 +109,32 @@ dynamic class Object3D {
 		this.RotateTo(_root._xmouse, _root._ymouse);
 	}
 	function Clear() {
-		delete (_root[this.MovieClip_name]);
+		_root[this.MovieClip_name].removeMovieClip();
 		_root.createEmptyMovieClip(this.MovieClip_name, Object3D_MC_Index);
 		this.PointList = new Array();
 		this.FaceList = new Array();
 		this.NumPoints = 0;
 		this.NumFaces = 0;
+	}
+	function LoadObj(LV:LoadVars) {
+		var Cn:Boolean = true;
+		for (i=0; Cn; i++) {
+			var Point:Array = LV["P"+i.toString()].split(",");
+			this.AddPoint(Point[0]*10, Point[1]*10, Point[2]*10);
+			if (String(LV["P"+String(i+1)]) == "undefined") {
+				Cn = false;
+				delete Point;
+			}
+		}
+		Cn = true;
+		for (i=0; Cn; i++) {
+			var Face:Array = LV["F"+i.toString()].split(",");
+			this.AddFace("Face"+i.toString(), Face.slice(0, 3), 0x3366FF, 80, 0x111111, 80, 4);
+			if (String(LV["F"+String(i+1)]) == "undefined") {
+				Cn = false;
+				delete Face;
+			}
+		}
 	}
 	// Sample Code
 	function CetSmpObj(Num:Number, gh:Number, fAlpha:Number, lAlpha:Number, thickness:Number) {
