@@ -1,0 +1,12 @@
+.\bin\Project1.exe
+.\bin\Project1.pdb
+.\bin\Project1.xml
+.\bin\Interop.VBScript_RegExp_55.dll
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\Interop.VBScript_RegExp_55.dll
+obj\Debug\Converter.vbproj.ResolveComReference.cache
+obj\Debug\Project1.FRMMAIN.resources
+obj\Debug\Converter.vbproj.GenerateResource.Cache
+obj\Debug\Project1.exe
+obj\Debug\Project1.xml
+obj\Debug\Project1.pdb
