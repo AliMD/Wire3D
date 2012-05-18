@@ -83,6 +83,24 @@ Object3D.prototype.RotateObject3D = function(x, y) {
 	}
 };
 
+Object3D.prototype.Delete = function (){
+    var i = 0;
+    while (i < this.FaceList.length)
+    {
+        removeMovieClip(this.FaceList[i].FaceName);
+        i++;
+    }
+};
+
+function Stop3D(objName) {
+    _root.onMouseDown = null;
+    _root.onMouseMove = null;
+    _root.onMouseUp = null;
+    _root.onEnterFrame = null;
+    this[objName].Delete();
+    delete this[objName];
+}
+
 // main test
 
 var fx:Number;
