@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Javascript Wire3D test 1</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="../1utils.js"></script>
+	<script type="text/javascript" src="../wire3d.js"></script>
+</head>
+<body>
+	<canvas id='canvas3d' width="1000" height="600" >
+		Your Browser Sucks :tr
+	</canvas>
+	<script type="text/javascript">
+	
+		(w3d=new wire3d({
+			dof : 500,
+			canvas : 'canvas3d'
+		})).addPoints([
+			{},
+			{x:100},
+			{y:100},
+			{x:100, y:100}
+		]).addStyles([
+			{
+				lineWidth:0,
+				fillStyle : 'rgba(100,100,200,0.5)'
+			},
+			{
+				lineWidth:3,
+				strokeStyle : 'rgba(10,10,50,0.5)'
+			}
+		]).addFaces([
+			{
+				p:[2,1,0],
+				s:0
+			},
+			{
+				p:[3,1,2],
+				s:1
+			}
+		]).rotate({x:30,y:20}).render();
+
+	</script>
+</body>
+</html>

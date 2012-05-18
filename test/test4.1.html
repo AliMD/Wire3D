@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Javascript Wire3D test 1</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="../1utils.js"></script>
+	<script type="text/javascript" src="../wire3d.js"></script>
+</head>
+<body>
+	<div id='fps'>Calculating ...</div>
+	<canvas id='canvas3d' width="1000" height="600" >
+		Your Browser Sucks :tr
+	</canvas>
+	<script type="text/javascript">
+		var gh       = 120,
+			alpha    = 0.6,
+			defStyle = {
+			lineWidth : 1,
+			strokeStyle : 'rgba(250,250,250,0.6)',
+			fillStyle : 'rgba(250,250,250,'+alpha+')'
+		};
+
+		(w3d=new wire3d({
+			dof    : 900,
+			canvas : 'canvas3d',
+			wallhk : true
+		})).addPoints([
+			[ gh,-gh, gh],
+			[ gh, gh, gh],
+			[-gh, gh, gh],
+			[-gh,-gh, gh],
+			[-gh,-gh,-gh],
+			[-gh, gh,-gh],
+			[ gh, gh,-gh],
+			[ gh,-gh,-gh]
+		]).addStyles([
+			{}.extend(defStyle,{fillStyle:'rgba(250,0,0,'+alpha+')'}),
+			{}.extend(defStyle,{fillStyle:'rgba(0,250,0,'+alpha+')'}),
+			{}.extend(defStyle,{fillStyle:'rgba(0,0,250,'+alpha+')'}),
+			{}.extend(defStyle,{fillStyle:'rgba(250,250,0,'+alpha+')'}),
+			{}.extend(defStyle,{fillStyle:'rgba(250,0,250,'+alpha+')'}),
+			{}.extend(defStyle,{fillStyle:'rgba(0,250,250,'+alpha+')'})
+		]).addFaces([
+			{p:[0, 1, 2, 3],s:0},
+			{p:[4, 5, 6, 7],s:1},
+			{p:[7, 6, 1, 0],s:2},
+			{p:[6, 5, 2, 1],s:3},
+			{p:[5, 4, 3, 2],s:4},
+			{p:[4, 7, 0, 3],s:5}
+		]);
+		
+		var tl = new timeloop(function(){
+			w3d.rotate({x:1,y:2}).render();
+		},500,true);
+
+		tl.onFps(function(fps){
+			document.getElementById('fps').innerHTML = 'FPS : '+fps.toString(10,2,1);
+		});
+
+	</script>
+</body>
+</html>

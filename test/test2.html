@@ -3,48 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Javascript Wire3D test 1</title>
-	<style type="text/css">
-		body{
-			background : #353535;
-			color : #eee;
-		}
-		#canvas3d{
-			position   : absolute;
-			left       : 0;
-			right      : 0;
-			top        : 0;
-			bottom     : 0;
-			margin     : auto;
-			outline    : 1px solid #050505;
-			background : #202020;
-		}
-		#fps{
-			color:transparent;
-			text-shadow:0px 0px 1px white, 0 0 1px #99E;
-			letter-spacing: 1px;
-		}
-	</style>
-	<script type="text/javascript" src="1utils.js"></script>
-	<script type="text/javascript" src="wire3d.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="../1utils.js"></script>
+	<script type="text/javascript" src="../wire3d.js"></script>
 </head>
 <body>
-	<div id='fps'>Calculating ...</div>
 	<canvas id='canvas3d' width="1000" height="600" >
 		Your Browser Sucks :tr
 	</canvas>
 	<script type="text/javascript">
 		var gh       = 120,
-			alpha    = 0.6,
+			alpha    = 0.5,
 			defStyle = {
-			lineWidth : 3,
+			lineWidth : 2,
 			strokeStyle : 'rgba(250,250,250,0.6)',
 			fillStyle : 'rgba(250,250,250,'+alpha+')'
 		};
 
 		(w3d=new wire3d({
-			dof    : 900,
-			canvas : 'canvas3d',
-			wallhk : true
+			dof : 900,
+			canvas : 'canvas3d'
 		})).addPoints([
 			[ gh,-gh, gh],
 			[ gh, gh, gh],
@@ -70,13 +48,9 @@
 			{p:[4, 7, 0, 3],s:5}
 		]);
 		
-		var tl = new timeloop(function(){
+		tl = new timeloop(function(){
 			w3d.rotate({x:1,y:2}).render();
-		},500,true);
-
-		tl.onFps(function(fps){
-			document.getElementById('fps').innerHTML = 'FPS : '+fps.toString(10,2,1);
-		});
+		},40);
 
 	</script>
 </body>
