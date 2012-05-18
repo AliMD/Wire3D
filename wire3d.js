@@ -18,26 +18,35 @@
 		// variables
 		config = {
 			dof    : 500,
+			log    : true,
 			canvas : 'canvas3d',
-			log : true,
-			data : {
+			center : {
+				x : 'c',
+				y : 'c'
+			}.extend(config.center),
+			data   : {
 				points : [],
 				styles : [],
 				faces  : []
 			}.extend(config.data)
-		}.extend(config);
+		}.extend(config); this.config = config;
 
-		this.data = config.data;
-
-		var points = this.data.points,
-			styles = this.data.styles,
-			faces  = this.data.faces,
+		var points = config.data.points,
+			styles = config.data.styles,
+			faces  = config.data.faces,
 			cnv    = document.getElementById(config.canvas),
-			stage  = {width : cnv.width, height:cnv.height},
-			ctx    = cnv.getContext('2d'); this.ctx = ctx;
+			stage  = {
+				width   : cnv.width,
+				height  : cnv.height,
+				context : cnv.getContext('2d')
+			}; this.stage = stage;
+
+			config.center.x=='c' && (config.center.x=stage.width/2);
+			config.center.y=='c' && (config.center.y=stage.height/2);
+
 		//core funcs
 		function log (){
-			console.log('Ali.MD Wire3D v1 beta :tr', config, this.data, ctx); // change me if you dont like :troll
+			console.log('Ali.MD Wire3D v1 beta :tr', config, stage); // change me if you dont like :troll
 		} this.log = log;
 		config.log && this.log();
 
@@ -54,9 +63,9 @@
 			isA(s) || (s = [s]);
 			s.forEach(function(s){
 				styles.push({
-					borderWidth : 1,
-					borderColor : 'rgb(0,0,0,0.9)',
-					faceColor : 'rgba(50,50,200,0.7)'
+					lineWidth : 1,
+					strokeStyle : 'rgb(0,0,0,0.9)',
+					fillStyle : 'rgba(50,50,200,0.7)'
 				}.extend(s));
 			}); return this;
 		} this.addStyles = addStyles;
@@ -76,23 +85,60 @@
 			return ((p[1].x-p[0].x)*(p[2].y-p[0].y)<(p[2].x-p[0].x)*(p[1].y-p[0].y));
 		}
 
-		function drawFace (face){
-			
+		function drawFaces (f){
+			f!==undefined || (f = faces);
+			//isA(f) || (f=[f]);
+			f.forEach(function (f,inx) {
+				// 3d -> 2d
+				var p2d = [], // 2d points array of this face
+					style = styles[f.s],
+					dof = config.dof;
+				f.p.forEach(function(n){
+					p3d = points[n]; // 3d point obj of this face's point (n)
+					p2d.push({
+						x : (dof*p3d.x/(p3d.z+dof)),
+						y : (dof*p3d.y/(p3d.z+dof))
+					});
+				});
+				if(p2d.length<3 || !faceVisible(p2d)) return this;
+				//draw face
+				with(stage.context){
+					beginPath();
+					moveTo(p2d[0].x,p2d[0].y);
+					for(var i=1;i<p2d.length;i++){
+						lineTo(p2d[i].x,p2d[i].y);
+					}
+					closePath();
+					strokeStyle = style.strokeStyle;
+					lineWidth   = style.lineWidth;
+					fillStyle   = style.fillStyle;
+					fill();
+					style.lineWidth>0 && stroke();
+				}
+				config.log && console.log('Draw face '+inx, p2d)
+			}); return this;
 		}
 
-		function render() {
-
-			faces.forEach(function (face) {
-				drawFace(face);
-			}); return this;
+		function render(noclear) {
+			noclear || clear();
+			stage.context.save();
+			stage.context.translate(config.center.x,config.center.y);
+			drawFaces();
+			stage.context.restore();
 		} this.render = render;
 
 		function clear(){
-			ctx.clearRect(0,0,stage.width,stage.height);
+			stage.context.clearRect(0,0,stage.width,stage.height);
 		} this.clear = clear;
 
-		function rotate(r) {
-			r = {x:0,y:0}.extend(r);
+		function r2d(r){
+			// radian to degree
+			return r*Math.PI/180;
+		}
+
+		function rotate(r, deg) {
+			r = {x:0, y:0}.extend(r);
+			deg && (r = {x:r2d(r.x), y:r2d(r.y)})
 			points.forEach(function(p,i){
 				var n = points[i]; //byref
 				n.z = p.z*Math.cos(r.x) - p.y*Math.sin(r.x);
