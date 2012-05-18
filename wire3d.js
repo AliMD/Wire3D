@@ -1,13 +1,16 @@
 /*
-	Ali.MD Wire3D v1 beta
-	As Simple as Possible 3D Rotation ported from Object3D.as
+	Ali.MD Wire3D v1 rc1
+	As Simple as Possible Pure Native Javascript 3D Rotation.
 	by Ali Mihandoost - i@ali.md
 */
 
 (function(window,undefined){
 	// global useful functions
-	!!Object.prototype.extend || (Object.prototype.extend = function(obj) {
-		for(i in obj) this[i]=obj[i]; return this;
+	!!Object.prototype.extend || (Object.prototype.extend = function() {
+		var target = this;
+	    [].forEach.call(arguments,function(source) {
+	      for (key in source) target[key] = source[key];
+	    }); return target;
 	});
 
 	function isF(value) { return ({}).toString.call(value) == "[object Function]" }
@@ -50,9 +53,10 @@
 		} this.log = log;
 		config.log && this.log();
 
-		function addPoints (p) {
-			isA(p) || (p = [p]);
+		function addPoints (p) { // addPints([{x:10,y:0,z:0},{x:0,y:10,z:0}])
+			( isA(p) && isO(p[0]) ) || (p = [p]); // addPints({x:10,y:0,z:0})
 			p.forEach(function(p){
+				isA(p) && ( p = {x:p[0], y:p[1], z:p[2]} );
 				points.push({
 					x:0, y:0, z:0
 				}.extend(p));
@@ -131,14 +135,13 @@
 			stage.context.clearRect(0,0,stage.width,stage.height);
 		} this.clear = clear;
 
-		function r2d(r){
-			// radian to degree
+		function r2d(r){ // radian to degree
 			return r*Math.PI/180;
 		}
 
-		function rotate(r, deg) {
+		function rotate(r, rad) {
 			r = {x:0, y:0}.extend(r);
-			deg && (r = {x:r2d(r.x), y:r2d(r.y)})
+			rad || (r = {x:r2d(r.x), y:r2d(r.y)})
 			points.forEach(function(p,i){
 				var n = points[i]; //byref
 				n.z = p.z*Math.cos(r.x) - p.y*Math.sin(r.x);
