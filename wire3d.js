@@ -31,11 +31,13 @@
 
 		var points = this.data.points,
 			styles = this.data.styles,
-			faces = this.data.faces;
-
+			faces  = this.data.faces,
+			cnv    = document.getElementById(config.canvas),
+			stage  = {width : cnv.width, height:cnv.height},
+			ctx    = cnv.getContext('2d'); this.ctx = ctx;
 		//core funcs
 		function log (){
-			console.log('Ali.MD Wire3D v1 beta :tr', config, this.data); // change me if you dont like :troll
+			console.log('Ali.MD Wire3D v1 beta :tr', config, this.data, ctx); // change me if you dont like :troll
 		} this.log = log;
 		config.log && this.log();
 
@@ -75,14 +77,19 @@
 		}
 
 		function drawFace (face){
-
+			
 		}
 
 		function render() {
+
 			faces.forEach(function (face) {
 				drawFace(face);
 			}); return this;
 		} this.render = render;
+
+		function clear(){
+			ctx.clearRect(0,0,stage.width,stage.height);
+		} this.clear = clear;
 
 		function rotate(r) {
 			r = {x:0,y:0}.extend(r);
