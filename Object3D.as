@@ -1,6 +1,6 @@
 ﻿/*
 	Ali.MD.Object3D.v2,2 light
-	As Simple as Posible 3D Rotation Class in Flash
+	As Simple as Possible 3D Rotation Class in Flash
 	by Ali Mihandoost - i@ali.md
 	Special tanx to Ali Vojdany for mathematical logic
 */
