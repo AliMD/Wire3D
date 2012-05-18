@@ -5,7 +5,7 @@
 */
 
 (function(window,undefined){
-
+	// global useful functions
 	!!Object.prototype.extend || (Object.prototype.extend = function(obj) {
 		for(i in obj) this[i]=obj[i]; return this;
 	});
@@ -13,28 +13,31 @@
 	function isF(value) { return ({}).toString.call(value) == "[object Function]" }
 	function isO(value) { return value instanceof Object }
 	function isA(value) { return value instanceof Array }
-  
 
 	window.wire3d = function(config){
-
-		//variables
+		// variables
 		config = {
 			dof    : 500,
-			canvas : 'canvas3d'
+			canvas : 'canvas3d',
+			log : true,
+			data : {
+				points : [],
+				styles : [],
+				faces  : []
+			}.extend(config.data)
 		}.extend(config);
 
-		var points = [], styles = [], faces = [];
+		this.data = config.data;
 
-		this.data = {
-			points : points,
-			styles : styles,
-			faces  : faces
-		}
+		var points = this.data.points,
+			styles = this.data.styles,
+			faces = this.data.faces;
 
 		//core funcs
 		function log (){
-			console.log(this.data);
+			console.log('Ali.MD Wire3D v1 beta :tr', config, this.data); // change me if you dont like :troll
 		} this.log = log;
+		config.log && this.log();
 
 		function addPoints (p) {
 			isA(p) || (p = [p]);
@@ -91,8 +94,6 @@
 				n.z = p.x*Math.sin(r.y) + n.z*Math.cos(r.y);
 			}); return this;
 		} this.rotate = rotate;
-
 	}
-
 })(window);
 
