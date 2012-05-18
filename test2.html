@@ -18,18 +18,19 @@
 			background : #202020;
 		}
 	</style>
+	<script type="text/javascript" src="1utils.js"></script>
+	<script type="text/javascript" src="wire3d.js"></script>
 </head>
 <body>
 	<canvas id='canvas3d' width="1000" height="600" >
 		Your Browser Sucks :tr
 	</canvas>
-	<script type="text/javascript" src="wire3d.js"></script>
 	<script type="text/javascript">
 		var gh       = 120,
-			alpha    = 0.7,
+			alpha    = 0.6,
 			defStyle = {
-			lineWidth : 2,
-			strokeStyle : 'rgba(250,250,250,0.8)',
+			lineWidth : 3,
+			strokeStyle : 'rgba(250,250,250,0.6)',
 			fillStyle : 'rgba(250,250,250,0.7)'
 		};
 
@@ -60,10 +61,11 @@
 			{p:[5, 4, 3, 2],s:4},
 			{p:[4, 7, 0, 3],s:5}
 		]);
+		
+		tl = new timeloop(function(){
+			w3d.rotate({x:1,y:2}).render();
+		},40);
 
-		setInterval(function(){
-			w3d.rotate({x:1,y:2}).render()
-		},1000/40)
 	</script>
 </body>
 </html>

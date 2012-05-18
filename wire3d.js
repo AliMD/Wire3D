@@ -1,24 +1,10 @@
 /*
-	Ali.MD Wire3D v1 rc1
+	Ali.MD Wire3D v1
 	As Simple as Possible Pure Native Javascript 3D Rotation.
 	by Ali Mihandoost - i@ali.md
 */
 
 (function(window,undefined){
-	// global useful functions
-	!!Object.prototype.extend || (Object.prototype.extend = function() {
-		var target = this;
-	    [].forEach.call(arguments,function(source) {
-	      for (key in source) target[key] = source[key];
-	    }); return target;
-	});
-
-	function isF(value) { return ({}).toString.call(value) == "[object Function]" }
-	function isO(value) { return value instanceof Object }
-	function isA(value) { return value instanceof Array }
-
-	
-
 	window.wire3d = function(config){
 		// variables
 		config = {
