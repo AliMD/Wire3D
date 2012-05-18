@@ -69,24 +69,21 @@
 		!that && (that = this);
 		fps = fps===undefined ? 40 : Math.round(1000/fps);
 
-		var i = 0, now = Date.now(), last = now, fpsAvrg=0;
-		fpsreport && (fpsreport=fps);
-		var showfps = function(fpsAvrg){
-			console.log('FPS : '+fpsAvrg.toString(10,2,1));
+		var i = 0, now = Date.now(), last = now;
+		var showfps = function(fps){
+			console.log('FPS : '+fps.toString(10,2,1));
 		};
 
 		function start(){
 			stop();
 			(interval = function(){
 				fn.call(that);
-				if(fpsreport>0){
+				if(fpsreport){
+					i++;
 					now = Date.now();
-					fpsAvrg = (1000/(now-last)+fpsAvrg)/2;
-					last = now;
-					if(++i>fpsreport){
-						fpsreport = Math.round(fpsAvrg,1);
-						showfps.call(that,fpsreport);
-						i=0
+					if(now-last >= 1000){
+						showfps.call(that,i);
+						i = 0; last = now;
 					}
 				}
 				timerId = setTimeout(interval,fps);
