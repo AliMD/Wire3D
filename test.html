@@ -24,9 +24,21 @@
 	<script type="text/javascript" src="wire3d.js"></script>
 	<script type="text/javascript">
 		var w3d = new wire3d('cnv');
+		w3d.addPoints([{x:1,y:4},{y:9,z:10},{z:2,x:1,y:5}]);
+		w3d.addFace([1,2,0],{
+			borderWidth:0
+		}).addFace([2,0,1],{
+			faceColor : 'rgba(150,50,100,0.5)',
+			borderWidth:1
+		});
+
+		/*
 		wire3d.loadObj('cube');
 		wire3d.rotate(20,10);
 		wire3d.render();
+		*/
+
+		w3d.log();
 	</script>
 </body>
 </html>
