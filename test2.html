@@ -34,7 +34,7 @@
 		};
 
 		(w3d=new wire3d({
-			dof : 600,
+			dof : 900,
 			canvas : 'canvas3d'
 		})).addPoints([
 			[ gh,-gh, gh],
@@ -62,8 +62,8 @@
 		]);
 
 		setInterval(function(){
-			w3d.rotate({y:5}).render()
-		},1000/5)
+			w3d.rotate({x:1,y:2}).render()
+		},1000/40)
 	</script>
 </body>
 </html>

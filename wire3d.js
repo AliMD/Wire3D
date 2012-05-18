@@ -20,7 +20,7 @@
 	window.wire3d = function(config){
 		// variables
 		config = {
-			dof    : 500,
+			dof    : 900,
 			log    : true,
 			canvas : 'canvas3d',
 			center : {
@@ -142,12 +142,13 @@
 		function rotate(r, rad) {
 			r = {x:0, y:0}.extend(r);
 			rad || (r = {x:r2d(r.x), y:r2d(r.y)})
-			points.forEach(function(p,i){
-				var n = points[i]; //byref
-				n.z = p.z*Math.cos(r.x) - p.y*Math.sin(r.x);
-				n.x = p.x*Math.cos(r.y) - n.z*Math.sin(r.y);
-				n.y = p.y*Math.cos(r.x) + p.z*Math.sin(r.x);
-				n.z = p.x*Math.sin(r.y) + n.z*Math.cos(r.y);
+			points.forEach(function(p){
+				var n = {};
+				n.z = p.z*Math.cos(r.x)-p.y*Math.sin(r.x);
+				n.x = p.x*Math.cos(r.y)-n.z*Math.sin(r.y);
+				n.y = p.y*Math.cos(r.x)+p.z*Math.sin(r.x);
+				n.z = p.x*Math.sin(r.y)+n.z*Math.cos(r.y);
+				p.extend(n);
 			}); return this;
 		} this.rotate = rotate;
 	}
