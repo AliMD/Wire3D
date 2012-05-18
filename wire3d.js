@@ -17,6 +17,8 @@
 	function isO(value) { return value instanceof Object }
 	function isA(value) { return value instanceof Array }
 
+	
+
 	window.wire3d = function(config){
 		// variables
 		config = {
@@ -119,7 +121,6 @@
 					fill();
 					style.lineWidth>0 && stroke();
 				}
-				config.log && console.log('Draw face '+inx, p2d)
 			}); return this;
 		}
 
@@ -151,6 +152,14 @@
 				p.extend(n);
 			}); return this;
 		} this.rotate = rotate;
+
+		function rotateTo(p, sp) {
+			sp = sp===undefined ? 0.001 : sp/1000;
+			rotate({
+				x:config.stage.center.y-p.y,
+				y:p.x-config.stage.center.x
+			});
+		} this.rotateTo = rotateTo;
 	}
 })(window);
 
