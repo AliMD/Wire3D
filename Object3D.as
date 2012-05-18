@@ -1,5 +1,5 @@
 ﻿/*
-	Ali.MD.Object3D.v1beta (As Simple as posible 3D Rotate in Flash)
+	Ali.MD.Object3D.v1 (As Simple as posible 3D Rotate in Flash)
 	by Ali Mihandoost - i@ali.md
 	Special tanx to Ali Vojdany for mathematical logic
 */
