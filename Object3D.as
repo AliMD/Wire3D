@@ -103,129 +103,117 @@ function Stop3D(objName) {
 
 // main test
 
-var fx:Number;
-var fy:Number;
-var gh:Number;
-var obj:Number;
-var den:Number;
-var omx:Number;
-var omy:Number;
-var xa:Number;
-var ya:Number;
-var mb:Boolean;
-
+var fx;
+var fy;
+var gh;
+var fAlpha;
+var lAlpha;
+var obj;
+var den;
+var omx;
+var omy;
+var xa;
+var ya;
+var mb;
+var Render;
+var FrameRate;
+FrameRate = 30;
+Render = true;
 omx = 0;
 omy = 0;
 xa = 0;
-ya = 0;
-fx = 800/2;
-fy = 600/2;
-gh = 100;
-den = .98;
+ya = 0.001000;
+gh = 50;
+fAlpha = 20;
+lAlpha = 80;
+fx = 400;
+fy = 275 - gh;
+den = 0.980000;
 mb = false;
 
 Robj = new Object3D(fx, fy);
 
-// - Create the object -
-var obj:Number;
+Robj.AddPoint(gh, -gh, gh);
+Robj.AddPoint(gh, gh, gh);
+Robj.AddPoint(-gh, gh, gh);
+Robj.AddPoint(-gh, -gh, gh);
+Robj.AddPoint(-gh, -gh, -gh);
+Robj.AddPoint(-gh, gh, -gh);
+Robj.AddPoint(gh, gh, -gh);
+Robj.AddPoint(gh, -gh, -gh);
+Robj.AddFace("Face0", [0, 1, 2, 3], 16711680, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face1", [4, 5, 6, 7], 16711680, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face2", [7, 6, 1, 0], 16711680, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face3", [6, 5, 2, 1], 16711680, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face4", [5, 4, 3, 2], 16711680, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face5", [4, 7, 0, 3], 16711680, fAlpha, 16777215, lAlpha);
+Robj.RotateObject3D(0, 0.800000);
 
-// Number of created object <--- *** ---
-obj = Math.floor(Math.random()*3+1);
+gh = gh * 1.200000;
+xup = -20;
 
-// ----------------------
-if (obj == 1) {
-	Robj.AddPoint(gh, -gh, gh);
-	Robj.AddPoint(gh, gh, gh);
-	Robj.AddPoint(-gh, gh, gh);
-	Robj.AddPoint(-gh, -gh, gh);
-	Robj.AddPoint(-gh, -gh, -gh);
-	Robj.AddPoint(-gh, gh, -gh);
-	Robj.AddPoint(gh, gh, -gh);
-	Robj.AddPoint(gh, -gh, -gh);
-	Robj.AddFace("Face0", [0, 1, 2, 3], 0xff0000, true);
-	Robj.AddFace("Face1", [4, 5, 6, 7], 0xffff00, true);
-	Robj.AddFace("Face2", [7, 6, 1, 0], 0x0000ff, true);
-	Robj.AddFace("Face3", [6, 5, 2, 1], 0xff00ff, true);
-	Robj.AddFace("Face4", [5, 4, 3, 2], 0x00ffff, true);
-	Robj.AddFace("Face5", [4, 7, 0, 3], 0x00ff00, true);
-	Robj.RotateObject3D(0, .5);
-} else if (obj == 2) {
-	Robj.AddPoint(gh, -gh, gh);
-	Robj.AddPoint(gh, -gh, -gh);
-	Robj.AddPoint(-gh, -gh, -gh);
-	Robj.AddPoint(-gh, -gh, gh);
-	Robj.AddPoint(0, 2*gh, 0);
-	Robj.AddFace("Face0", [4, 0, 1], 0x00ff00, true);
-	Robj.AddFace("Face1", [4, 1, 2], 0x0000ff, true);
-	Robj.AddFace("Face2", [4, 2, 3], 0xffff00, true);
-	Robj.AddFace("Face3", [4, 3, 0], 0xff0000, true);
-	Robj.AddFace("Face4", [3, 2, 1, 0], 0x00ffff, true);
-	Robj.RotateObject3D(0, .5);
-} else if (obj=3) {
-	Robj.AddPoint(-gh/2, 0, gh+gh/2);
-	Robj.AddPoint(-gh/2, -gh, gh);
-	Robj.AddPoint(-gh/2, -gh-gh/2, 0);
-	Robj.AddPoint(-gh/2, -gh, -gh);
-	Robj.AddPoint(-gh/2, 0, -gh-gh/2);
-	Robj.AddPoint(-gh/2, gh, -gh);
-	Robj.AddPoint(-gh/2, gh+gh/2, 0);
-	Robj.AddPoint(-gh/2, gh, gh);
-	Robj.AddPoint(gh/2, 0, gh+gh/2);
-	Robj.AddPoint(gh/2, -gh, gh);
-	Robj.AddPoint(gh/2, -gh-gh/2, 0);
-	Robj.AddPoint(gh/2, -gh, -gh);
-	Robj.AddPoint(gh/2, 0, -gh-gh/2);
-	Robj.AddPoint(gh/2, gh, -gh);
-	Robj.AddPoint(gh/2, gh+gh/2, 0);
-	Robj.AddPoint(gh/2, gh, gh);
-	Robj.AddFace("Face0", [0, 1, 9, 8], 0xff9900, true);
-	Robj.AddFace("Face1", [1, 2, 10, 9], 0xffcc00, true);
-	Robj.AddFace("Face2", [2, 3, 11, 10], 0xff9900, true);
-	Robj.AddFace("Face3", [3, 4, 12, 11], 0xffcc00, true);
-	Robj.AddFace("Face4", [4, 5, 13, 12], 0xff9900, true);
-	Robj.AddFace("Face5", [5, 6, 14, 13], 0xffcc00, true);
-	Robj.AddFace("Face6", [6, 7, 15, 14], 0xff9900, true);
-	Robj.AddFace("Face7", [7, 0, 8, 15], 0xffcc00, true);
-	Robj.AddFace("Face8", [8, 9, 10, 11, 12, 13, 14, 15], 0xcc0000, true);
-	Robj.AddFace("Face9", [7, 6, 5, 4, 3, 2, 1, 0], 0xcc3300, true);
-	Robj.RotateObject3D(0, .5);
-}
+Robj.AddPoint(gh, -gh + xup, gh);
+Robj.AddPoint(gh, -gh + xup, -gh);
+Robj.AddPoint(-gh, -gh + xup, -gh);
+Robj.AddPoint(-gh, -gh + xup, gh);
+Robj.AddPoint(0, 2 * gh, 0);
+Robj.AddFace("Face6", [12, 8, 9], 255, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face7", [12, 9, 10], 255, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face8", [12, 10, 11], 255, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face9", [12, 11, 8], 255, fAlpha, 16777215, lAlpha);
+Robj.AddFace("Face10", [11, 10, 9, 8], 255, fAlpha, 16777215, lAlpha);
 
-// -- All Events Fuction --
-
-// -- Mosuse effect --
-this.onMouseDown = function() {
-	mb = true;
-	ya = 0;
-	xa = 0;
-	omx = _root._xmouse;
-	omy = _root._ymouse;
-	onEnterFrame = null;
-};
-this.onMouseMove = function() {
-	if (mb) {
-		xa = (_root._xmouse-omx)/150;
-		ya = (omy-_root._ymouse)/150;
-		Robj.RotateObject3D(ya, xa);
-		Robj.DrawObject3D();
-		omx = _xmouse;
-		omy = _ymouse;
-	}
-};
-_root.onMouseUp = function() {
-	mb = false;
-	_root.onEnterFrame = function() {
-		if (Math.abs(xa)<.0001 and Math.abs(ya)<.0001) {
-			_root.onEnterFrame = null;
-		}
-		xa *= den;
-		ya *= den;
-		Robj.RotateObject3D(ya, xa);
-		Robj.DrawObject3D();
-	};
+// Events
+_root.onEnterFrame = function () {
+    xa = (fy - _root._ymouse) / 1500;
+    ya = (_root._xmouse - fx) / 1500;
+    Render = true;
 };
 
-// -- Action of Frame 1 --
+_root.onMouseDown = function () {
+    mb = true;
+    ya = 0;
+    xa = 0;
+    omx = _root._xmouse;
+    omy = _root._ymouse;
+    _root.onEnterFrame = null;
+};
+
+_root.onMouseMove = function () {
+    if (mb)
+    {
+        ya = (_root._xmouse - omx) / 35;
+        xa = (omy - _root._ymouse) / 35;
+        Render = true;
+        omx = _xmouse;
+        omy = _ymouse;
+    }
+};
+
+_root.onMouseUp = function () {
+    mb = false;
+    _root.onEnterFrame = function (){
+        if (Math.abs(xa) < 0.000100 && Math.abs(ya) < 0.000100){
+            _root.onEnterFrame = null;
+        } // end if
+        xa = xa * den;
+        ya = ya * den;
+        Render = true;
+    };
+};
+
+
+// Action of Frame 1 
 stop();
-Robj.DrawObject3D();
 
+dl.onRelease = function () {
+    Stop3D("Robj");
+};
+
+RobjFr = setInterval(function () {
+    if (Render){
+        Robj.RotateObject3D(xa, ya);
+        Robj.DrawObject3D();
+        Render = false;
+    }
+}, 1000 / FrameRate);
