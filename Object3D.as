@@ -1,219 +1,169 @@
 ﻿/*
-	Ali.MD.Object3D.v1 (As Simple as posible 3D Rotate in Flash)
+	Ali.MD.Object3D.v2b light
+	As Simple as Posible 3D Rotation Class in Flash
 	by Ali Mihandoost - i@ali.md
 	Special tanx to Ali Vojdany for mathematical logic
 */
 
-function Point2D(x, y) {
-	this.x = x;
-	this.y = y;
-}
-
-function Point3D(x, y, z) {
-	this.x = x;
-	this.y = y;
-	this.z = z;
-}
-
-function Object3D(screenX, screenY) {
-	this.screenX = screenX;
-	this.screenY = screenY;
-	this.D = 500;
-	this.PointList = new Array();
-	this.FaceList = new Array();
-	this.NumPoints = 0;
-	this.NumFaces = 0;
-}
-
-Object3D.prototype.AddPoint = function(x, y, z) {
-	this.PointList[this.NumPoints++] = new Point3D(x, y, z);
-};
-
-Object3D.prototype.AddFace = function(FaceName, Face, Colour, Outline) {
-	this.FaceList[this.NumFaces] = Face;
-	this.FaceList[this.NumFaces].FaceName = FaceName;
-	this.FaceList[this.NumFaces].Colour = Colour;
-	this.FaceList[this.NumFaces++].Outline = Outline;
-};
-
-Object3D.prototype.DrawFace = function(Face, depth) {
-	var Pt2D = new Array();
-	for (var i = 0; i<Face.length; i++) {
-		Pt2D[i] = new Point2D((this.D*(this.PointList[Face[i]].x/(this.PointList[Face[i]].z+this.D)))+this.screenX, (this.D*(this.PointList[Face[i]].y/(this.PointList[Face[i]].z+this.D)))+this.screenY);
+dynamic class Object3D {
+	// Variables
+	private var MovieClip_name:String;
+	static var Object3D_MC_Index:Number = 0;
+	// Constructor function
+	function Point2D(x, y) {
+		this.x = x;
+		this.y = y;
 	}
-	if (this.getVisible(Pt2D[0], Pt2D[1], Pt2D[2])) {
-		_root.createEmptyMovieClip(Face.FaceName, depth);
-		tellTarget (_root[Face.FaceName]) {
-			beginFill(Face.Colour, 100);
-			if (Face.Outline) {
-				lineStyle(0, 0x000000, 100);
-			}
-			moveTo(Pt2D[0].x, Pt2D[0].y);
-			for (var i = 1; i<Face.length; i++) {
-				lineTo(Pt2D[i].x, Pt2D[i].y);
-			}
-			lineTo(Pt2D[0].x, Pt2D[0].y);
-			endFill();
+	function Point3D(x, y, z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+	function AddPoint(x, y, z) {
+		this.PointList[this.NumPoints++] = new Point3D(x, y, z);
+	}
+	function AddFace(FaceName, Face, Colour, Outline) {
+		this.FaceList[this.NumFaces] = Face;
+		this.FaceList[this.NumFaces].FaceName = FaceName;
+		this.FaceList[this.NumFaces].Colour = Colour;
+		this.FaceList[this.NumFaces++].Outline = Outline;
+	}
+	function DrawFace(Face, depth) {
+		var Pt2D = new Array();
+		for (var i = 0; i<Face.length; i++) {
+			Pt2D[i] = new Point2D((this.D*(this.PointList[Face[i]].x/(this.PointList[Face[i]].z+this.D))), (this.D*(this.PointList[Face[i]].y/(this.PointList[Face[i]].z+this.D))));
 		}
-	} else {
-		_root[Face.FaceName].removeMovieClip();
+		if (this.getVisible(Pt2D[0], Pt2D[1], Pt2D[2])) {
+			_root[this.MovieClip_name].createEmptyMovieClip(Face.FaceName, depth);
+			tellTarget (_root[this.MovieClip_name][Face.FaceName]) {
+				beginFill(Face.Colour, 100);
+				if (Face.Outline) {
+					lineStyle(0, 0x000000, 100);
+				}
+				moveTo(Pt2D[0].x, Pt2D[0].y);
+				for (var i = 1; i<Face.length; i++) {
+					lineTo(Pt2D[i].x, Pt2D[i].y);
+				}
+				lineTo(Pt2D[0].x, Pt2D[0].y);
+				endFill();
+			}
+		} else {
+			_root[this.MovieClip_name][Face.FaceName].removeMovieClip();
+		}
 	}
-};
-
-Object3D.prototype.getVisible = function(p1, p2, p3) {
-	return ((p2.x-p1.x)*(p3.y-p1.y)<(p3.x-p1.x)*(p2.y-p1.y));
-};
-
-Object3D.prototype.DrawObject3D = function() {
-	for (var i = 0; i<this.FaceList.length; i++) {
-		this.DrawFace(this.FaceList[i], i);
+	function Object3D(X:Number, Y:Number) {
+		this.MovieClip_name = "Object3D_MC"+Object3D_MC_Index.toString();
+		_root.createEmptyMovieClip(this.MovieClip_name, Object3D_MC_Index);
+		_root[this.MovieClip_name]._x = X;
+		_root[this.MovieClip_name]._y = Y;
+		st = About();
+		tn = 0;
+		for (i=0; i<st.length; i++) {
+			tn += Number(st.charCodeAt(i));
+		}
+		if (tn<>10098) {
+			this.MovieClip_name = "";
+			delete st;
+		}
+		this.D = 500;
+		this.PointList = new Array();
+		this.FaceList = new Array();
+		this.NumPoints = 0;
+		this.NumFaces = 0;
+		Object3D_MC_Index++;
+		trace(st);
 	}
-};
-
-Object3D.prototype.RotateObject3D = function(x, y) {
-	for (var i = 0; i<this.PointList.length; i++) {
-		var px = this.PointList[i].x;
-		var py = this.PointList[i].y;
-		var pz = this.PointList[i].z;
-		var temp_y = py*Math.cos(x)+pz*Math.sin(x);
-		var temp_z1 = pz*Math.cos(x)-py*Math.sin(x);
-		var temp_x = px*Math.cos(y)-temp_z1*Math.sin(y);
-		var temp_z = px*Math.sin(y)+temp_z1*Math.cos(y);
-		this.PointList[i] = new Point3D(temp_x, temp_y, temp_z);
+	function getVisible(p1, p2, p3) {
+		return ((p2.x-p1.x)*(p3.y-p1.y)<(p3.x-p1.x)*(p2.y-p1.y));
 	}
-};
-
-Object3D.prototype.Delete = function (){
-    var i = 0;
-    while (i < this.FaceList.length)
-    {
-        removeMovieClip(this.FaceList[i].FaceName);
-        i++;
-    }
-};
-
-function Stop3D(objName) {
-    _root.onMouseDown = null;
-    _root.onMouseMove = null;
-    _root.onMouseUp = null;
-    _root.onEnterFrame = null;
-    this[objName].Delete();
-    delete this[objName];
+	function Render() {
+		for (var i = 0; i<this.FaceList.length; i++) {
+			this.DrawFace(this.FaceList[i], i);
+		}
+	}
+	function Rotate(x, y) {
+		for (var i = 0; i<this.PointList.length; i++) {
+			var px = this.PointList[i].x;
+			var py = this.PointList[i].y;
+			var pz = this.PointList[i].z;
+			var temp_y = py*Math.cos(x)+pz*Math.sin(x);
+			var temp_z1 = pz*Math.cos(x)-py*Math.sin(x);
+			var temp_x = px*Math.cos(y)-temp_z1*Math.sin(y);
+			var temp_z = px*Math.sin(y)+temp_z1*Math.cos(y);
+			this.PointList[i] = new Point3D(temp_x, temp_y, temp_z);
+		}
+	}
+	// Sample Code
+	function CreateSampleObject(Num:Number) {
+		switch (Num) {
+		case 1 :
+			this.AddPoint(gh, -gh, gh);
+			this.AddPoint(gh, -gh, -gh);
+			this.AddPoint(-gh, -gh, -gh);
+			this.AddPoint(-gh, -gh, gh);
+			this.AddPoint(0, 2*gh, 0);
+			this.AddFace("Face0", [4, 0, 1], 0x00ff00, true);
+			this.AddFace("Face1", [4, 1, 2], 0x0000ff, true);
+			this.AddFace("Face2", [4, 2, 3], 0xffff00, true);
+			this.AddFace("Face3", [4, 3, 0], 0xff0000, true);
+			this.AddFace("Face4", [3, 2, 1, 0], 0x00ffff, true);
+			this.Rotate(0, .5);
+			break;
+		case 2 :
+			this.AddPoint(-gh/2, 0, gh+gh/2);
+			this.AddPoint(-gh/2, -gh, gh);
+			this.AddPoint(-gh/2, -gh-gh/2, 0);
+			this.AddPoint(-gh/2, -gh, -gh);
+			this.AddPoint(-gh/2, 0, -gh-gh/2);
+			this.AddPoint(-gh/2, gh, -gh);
+			this.AddPoint(-gh/2, gh+gh/2, 0);
+			this.AddPoint(-gh/2, gh, gh);
+			this.AddPoint(gh/2, 0, gh+gh/2);
+			this.AddPoint(gh/2, -gh, gh);
+			this.AddPoint(gh/2, -gh-gh/2, 0);
+			this.AddPoint(gh/2, -gh, -gh);
+			this.AddPoint(gh/2, 0, -gh-gh/2);
+			this.AddPoint(gh/2, gh, -gh);
+			this.AddPoint(gh/2, gh+gh/2, 0);
+			this.AddPoint(gh/2, gh, gh);
+			this.AddFace("Face0", [0, 1, 9, 8], 0xff9900, true);
+			this.AddFace("Face1", [1, 2, 10, 9], 0xffcc00, true);
+			this.AddFace("Face2", [2, 3, 11, 10], 0xff9900, true);
+			this.AddFace("Face3", [3, 4, 12, 11], 0xffcc00, true);
+			this.AddFace("Face4", [4, 5, 13, 12], 0xff9900, true);
+			this.AddFace("Face5", [5, 6, 14, 13], 0xffcc00, true);
+			this.AddFace("Face6", [6, 7, 15, 14], 0xff9900, true);
+			this.AddFace("Face7", [7, 0, 8, 15], 0xffcc00, true);
+			this.AddFace("Face8", [8, 9, 10, 11, 12, 13, 14, 15], 0xcc0000, true);
+			this.AddFace("Face9", [7, 6, 5, 4, 3, 2, 1, 0], 0xcc3300, true);
+			this.Rotate(0, .5);
+			break;
+		default :
+			this.AddPoint(gh, -gh, gh);
+			this.AddPoint(gh, gh, gh);
+			this.AddPoint(-gh, gh, gh);
+			this.AddPoint(-gh, -gh, gh);
+			this.AddPoint(-gh, -gh, -gh);
+			this.AddPoint(-gh, gh, -gh);
+			this.AddPoint(gh, gh, -gh);
+			this.AddPoint(gh, -gh, -gh);
+			this.AddFace("Face0", [0, 1, 2, 3], 0xff0000, true);
+			this.AddFace("Face1", [4, 5, 6, 7], 0xffff00, true);
+			this.AddFace("Face2", [7, 6, 1, 0], 0x0000ff, true);
+			this.AddFace("Face3", [6, 5, 2, 1], 0xff00ff, true);
+			this.AddFace("Face4", [5, 4, 3, 2], 0x00ffff, true);
+			this.AddFace("Face5", [4, 7, 0, 3], 0x00ff00, true);
+			this.Rotate(0, .5);
+		}
+	}
+	// Method to return property values
+	function get MovieClipName():String {
+		return this.MovieClip_name;
+	}
+	function set MovieClipName(Name:String) {
+		this.MovieClip_name = Name;
+	}
+	function About():String {
+		return ("Ali.MD.Object3D.v2b light\nAs Simple as Posible 3D Rotation Class in Flash\nby Ali Mihandoost - i@ali.md\nSpecial tanx to Ali Vojdany for mathematical logic");
+	}
 }
-
-// main test
-
-var fx;
-var fy;
-var gh;
-var fAlpha;
-var lAlpha;
-var obj;
-var den;
-var omx;
-var omy;
-var xa;
-var ya;
-var mb;
-var Render;
-var FrameRate;
-FrameRate = 30;
-Render = true;
-omx = 0;
-omy = 0;
-xa = 0;
-ya = 0.001000;
-gh = 50;
-fAlpha = 20;
-lAlpha = 80;
-fx = 400;
-fy = 275 - gh;
-den = 0.980000;
-mb = false;
-
-Robj = new Object3D(fx, fy);
-
-Robj.AddPoint(gh, -gh, gh);
-Robj.AddPoint(gh, gh, gh);
-Robj.AddPoint(-gh, gh, gh);
-Robj.AddPoint(-gh, -gh, gh);
-Robj.AddPoint(-gh, -gh, -gh);
-Robj.AddPoint(-gh, gh, -gh);
-Robj.AddPoint(gh, gh, -gh);
-Robj.AddPoint(gh, -gh, -gh);
-Robj.AddFace("Face0", [0, 1, 2, 3], 16711680, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face1", [4, 5, 6, 7], 16711680, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face2", [7, 6, 1, 0], 16711680, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face3", [6, 5, 2, 1], 16711680, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face4", [5, 4, 3, 2], 16711680, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face5", [4, 7, 0, 3], 16711680, fAlpha, 16777215, lAlpha);
-Robj.RotateObject3D(0, 0.800000);
-
-gh = gh * 1.200000;
-xup = -20;
-
-Robj.AddPoint(gh, -gh + xup, gh);
-Robj.AddPoint(gh, -gh + xup, -gh);
-Robj.AddPoint(-gh, -gh + xup, -gh);
-Robj.AddPoint(-gh, -gh + xup, gh);
-Robj.AddPoint(0, 2 * gh, 0);
-Robj.AddFace("Face6", [12, 8, 9], 255, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face7", [12, 9, 10], 255, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face8", [12, 10, 11], 255, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face9", [12, 11, 8], 255, fAlpha, 16777215, lAlpha);
-Robj.AddFace("Face10", [11, 10, 9, 8], 255, fAlpha, 16777215, lAlpha);
-
-// Events
-_root.onEnterFrame = function () {
-    xa = (fy - _root._ymouse) / 1500;
-    ya = (_root._xmouse - fx) / 1500;
-    Render = true;
-};
-
-_root.onMouseDown = function () {
-    mb = true;
-    ya = 0;
-    xa = 0;
-    omx = _root._xmouse;
-    omy = _root._ymouse;
-    _root.onEnterFrame = null;
-};
-
-_root.onMouseMove = function () {
-    if (mb)
-    {
-        ya = (_root._xmouse - omx) / 35;
-        xa = (omy - _root._ymouse) / 35;
-        Render = true;
-        omx = _xmouse;
-        omy = _ymouse;
-    }
-};
-
-_root.onMouseUp = function () {
-    mb = false;
-    _root.onEnterFrame = function (){
-        if (Math.abs(xa) < 0.000100 && Math.abs(ya) < 0.000100){
-            _root.onEnterFrame = null;
-        } // end if
-        xa = xa * den;
-        ya = ya * den;
-        Render = true;
-    };
-};
-
-
-// Action of Frame 1 
-stop();
-
-dl.onRelease = function () {
-    Stop3D("Robj");
-};
-
-RobjFr = setInterval(function () {
-    if (Render){
-        Robj.RotateObject3D(xa, ya);
-        Robj.DrawObject3D();
-        Render = false;
-    }
-}, 1000 / FrameRate);
