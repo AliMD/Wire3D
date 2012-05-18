@@ -10,6 +10,11 @@
 		for(i in obj) this[i]=obj[i]; return this;
 	});
 
+	function isF(value) { return ({}).toString.call(value) == "[object Function]" }
+	function isO(value) { return value instanceof Object }
+	function isA(value) { return value instanceof Array }
+  
+
 	window.wire3d = function(config){
 
 		//variables
@@ -18,36 +23,49 @@
 			canvas : 'canvas3d'
 		}.extend(config);
 
-		var points = [], faces = [];
+		var points = [], styles = [], faces = [];
+
+		this.data = {
+			points : points,
+			styles : styles,
+			faces  : faces
+		}
 
 		//core funcs
 		function log (){
-			console.log({
-				points:points,
-				faces:faces
-			});
+			console.log(this.data);
 		} this.log = log;
 
-		function addPoint (p3d) {
-			points.push({x:0, y:0, z:0}.extend(p3d)); return this;
-		} this.addPoint=addPoint;
-
-		function addPoints (arr) {
-			arr.forEach(function(point){
-				addPoint(point);
+		function addPoints (p) {
+			isA(p) || (p = [p]);
+			p.forEach(function(p){
+				points.push({
+					x:0, y:0, z:0
+				}.extend(p));
 			}); return this;
 		} this.addPoints=addPoints;
 
-		function addFace (points, style) {
-			faces.push({
-				points : points,
-				style  : {
-					faceColor : 'rgba(50,50,200,0.7)',
+		function addStyles (s){
+			isA(s) || (s = [s]);
+			s.forEach(function(s){
+				styles.push({
 					borderWidth : 1,
-					borderColor : 'rgb(0,0,0,0.9)'
-				}.extend(style)
+					borderColor : 'rgb(0,0,0,0.9)',
+					faceColor : 'rgba(50,50,200,0.7)'
+				}.extend(s));
 			}); return this;
-		} this.addFace = addFace;
+		} this.addStyles = addStyles;
+
+		function addFaces (f){ // addFaces([{p:[0,1,2],s:1},{p:[1,2,0],s:1}]);
+			( isA(f) && ( isO(f[0]) || isA(f[0]) ) ) || (f = [f]); // addFace({p:[0,1,2],s:1})
+			f.forEach(function(f){
+				isA(f) && (f={p:f}); // addFaces([0,1,2]) or addFaces([[0,1,2],[1,2,0]]);
+				faces.push({
+					p : [0,0,0], // points index
+					s : 0 // style index
+				}.extend(f));
+			}); return this;
+		} this.addFaces = addFaces;
 
 		function faceVisible (p) {
 			return ((p[1].x-p[0].x)*(p[2].y-p[0].y)<(p[2].x-p[0].x)*(p[1].y-p[0].y));

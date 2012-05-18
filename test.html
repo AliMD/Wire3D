@@ -23,19 +23,33 @@
 	<canvas id='canvas3d' width="1000" height="600" />
 	<script type="text/javascript" src="wire3d.js"></script>
 	<script type="text/javascript">
-		(new wire3d({
+		(w3d=new wire3d({
 			dof : 500,
 			canvas : 'canvas3d'
 		})).addPoints([
 			{x:1,y:4},
 			{y:9,z:10},
 			{z:2,x:1,y:5}
-		]).addFace([1,2,0],{
-			borderWidth:0
-		}).addFace([2,0,1],{
-			faceColor : 'rgba(150,50,100,0.5)',
-			borderWidth:1
-		}).rotate({x:20,y:10}).render().log();
+		]).addStyles([
+			{
+				borderWidth:0,
+				faceColor : 'rgba(150,50,100,0.5)'
+			},
+			{
+				borderWidth:1,
+				borderColor : 'rgba(150,50,100,0.5)'
+			}
+		]).addFaces([
+			{
+				p:[1,2,0],
+				s:0
+			},
+			{
+				p:[2,0,1],
+				s:1
+			}
+			
+		]).rotate({x:20,y:10}).render().log();
 	</script>
 </body>
 </html>
