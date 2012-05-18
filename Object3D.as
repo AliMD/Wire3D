@@ -82,3 +82,132 @@ Object3D.prototype.RotateObject3D = function(x, y) {
 		this.PointList[i] = new Point3D(temp_x, temp_y, temp_z);
 	}
 };
+
+// main test
+
+var fx:Number;
+var fy:Number;
+var gh:Number;
+var obj:Number;
+var den:Number;
+var omx:Number;
+var omy:Number;
+var xa:Number;
+var ya:Number;
+var mb:Boolean;
+
+omx = 0;
+omy = 0;
+xa = 0;
+ya = 0;
+fx = 800/2;
+fy = 600/2;
+gh = 100;
+den = .98;
+mb = false;
+
+Robj = new Object3D(fx, fy);
+
+// - Create the object -
+var obj:Number;
+
+// Number of created object <--- *** ---
+obj = Math.floor(Math.random()*3+1);
+
+// ----------------------
+if (obj == 1) {
+	Robj.AddPoint(gh, -gh, gh);
+	Robj.AddPoint(gh, gh, gh);
+	Robj.AddPoint(-gh, gh, gh);
+	Robj.AddPoint(-gh, -gh, gh);
+	Robj.AddPoint(-gh, -gh, -gh);
+	Robj.AddPoint(-gh, gh, -gh);
+	Robj.AddPoint(gh, gh, -gh);
+	Robj.AddPoint(gh, -gh, -gh);
+	Robj.AddFace("Face0", [0, 1, 2, 3], 0xff0000, true);
+	Robj.AddFace("Face1", [4, 5, 6, 7], 0xffff00, true);
+	Robj.AddFace("Face2", [7, 6, 1, 0], 0x0000ff, true);
+	Robj.AddFace("Face3", [6, 5, 2, 1], 0xff00ff, true);
+	Robj.AddFace("Face4", [5, 4, 3, 2], 0x00ffff, true);
+	Robj.AddFace("Face5", [4, 7, 0, 3], 0x00ff00, true);
+	Robj.RotateObject3D(0, .5);
+} else if (obj == 2) {
+	Robj.AddPoint(gh, -gh, gh);
+	Robj.AddPoint(gh, -gh, -gh);
+	Robj.AddPoint(-gh, -gh, -gh);
+	Robj.AddPoint(-gh, -gh, gh);
+	Robj.AddPoint(0, 2*gh, 0);
+	Robj.AddFace("Face0", [4, 0, 1], 0x00ff00, true);
+	Robj.AddFace("Face1", [4, 1, 2], 0x0000ff, true);
+	Robj.AddFace("Face2", [4, 2, 3], 0xffff00, true);
+	Robj.AddFace("Face3", [4, 3, 0], 0xff0000, true);
+	Robj.AddFace("Face4", [3, 2, 1, 0], 0x00ffff, true);
+	Robj.RotateObject3D(0, .5);
+} else if (obj=3) {
+	Robj.AddPoint(-gh/2, 0, gh+gh/2);
+	Robj.AddPoint(-gh/2, -gh, gh);
+	Robj.AddPoint(-gh/2, -gh-gh/2, 0);
+	Robj.AddPoint(-gh/2, -gh, -gh);
+	Robj.AddPoint(-gh/2, 0, -gh-gh/2);
+	Robj.AddPoint(-gh/2, gh, -gh);
+	Robj.AddPoint(-gh/2, gh+gh/2, 0);
+	Robj.AddPoint(-gh/2, gh, gh);
+	Robj.AddPoint(gh/2, 0, gh+gh/2);
+	Robj.AddPoint(gh/2, -gh, gh);
+	Robj.AddPoint(gh/2, -gh-gh/2, 0);
+	Robj.AddPoint(gh/2, -gh, -gh);
+	Robj.AddPoint(gh/2, 0, -gh-gh/2);
+	Robj.AddPoint(gh/2, gh, -gh);
+	Robj.AddPoint(gh/2, gh+gh/2, 0);
+	Robj.AddPoint(gh/2, gh, gh);
+	Robj.AddFace("Face0", [0, 1, 9, 8], 0xff9900, true);
+	Robj.AddFace("Face1", [1, 2, 10, 9], 0xffcc00, true);
+	Robj.AddFace("Face2", [2, 3, 11, 10], 0xff9900, true);
+	Robj.AddFace("Face3", [3, 4, 12, 11], 0xffcc00, true);
+	Robj.AddFace("Face4", [4, 5, 13, 12], 0xff9900, true);
+	Robj.AddFace("Face5", [5, 6, 14, 13], 0xffcc00, true);
+	Robj.AddFace("Face6", [6, 7, 15, 14], 0xff9900, true);
+	Robj.AddFace("Face7", [7, 0, 8, 15], 0xffcc00, true);
+	Robj.AddFace("Face8", [8, 9, 10, 11, 12, 13, 14, 15], 0xcc0000, true);
+	Robj.AddFace("Face9", [7, 6, 5, 4, 3, 2, 1, 0], 0xcc3300, true);
+	Robj.RotateObject3D(0, .5);
+}
+
+// -- All Events Fuction --
+
+// -- Mosuse effect --
+this.onMouseDown = function() {
+	mb = true;
+	ya = 0;
+	xa = 0;
+	omx = _root._xmouse;
+	omy = _root._ymouse;
+	onEnterFrame = null;
+};
+this.onMouseMove = function() {
+	if (mb) {
+		xa = (_root._xmouse-omx)/150;
+		ya = (omy-_root._ymouse)/150;
+		Robj.RotateObject3D(ya, xa);
+		Robj.DrawObject3D();
+		omx = _xmouse;
+		omy = _ymouse;
+	}
+};
+_root.onMouseUp = function() {
+	mb = false;
+	_root.onEnterFrame = function() {
+		if (Math.abs(xa)<.0001 and Math.abs(ya)<.0001) {
+			_root.onEnterFrame = null;
+		}
+		xa *= den;
+		ya *= den;
+		Robj.RotateObject3D(ya, xa);
+		Robj.DrawObject3D();
+	};
+};
+
+// -- Action of Frame 1 --
+stop();
+Robj.DrawObject3D();
+
