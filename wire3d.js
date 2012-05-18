@@ -11,6 +11,7 @@
 			dof    : 900,
 			log    : true,
 			canvas : 'canvas3d',
+			wallhk : false,
 			center : {
 				x : 'c',
 				y : 'c'
@@ -74,7 +75,8 @@
 		} this.addFaces = addFaces;
 
 		function faceVisible (p) {
-			return ((p[1].x-p[0].x)*(p[2].y-p[0].y)<(p[2].x-p[0].x)*(p[1].y-p[0].y));
+
+			return config.wallhk || ((p[1].x-p[0].x)*(p[2].y-p[0].y)<(p[2].x-p[0].x)*(p[1].y-p[0].y));
 		}
 
 		function drawFaces (f){
@@ -88,8 +90,8 @@
 				f.p.forEach(function(n){
 					p3d = points[n]; // 3d point obj of this face's point (n)
 					p2d.push({
-						x : (dof*p3d.x/(p3d.z+dof)),
-						y : (dof*p3d.y/(p3d.z+dof))
+						x : Math.round(dof*p3d.x/(p3d.z+dof),1),
+						y : Math.round(dof*p3d.y/(p3d.z+dof),1)
 					});
 				});
 				if(p2d.length<3 || !faceVisible(p2d)) return this;

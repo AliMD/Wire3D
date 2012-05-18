@@ -5,6 +5,9 @@
 */
 
 (function(undefined){
+	// use a single debug config for all scripts ;)
+	window.deBug = true;
+
 	// add extend to Objects
 	!!Object.prototype.extend || (Object.prototype.extend = function() {
 		var target = this;
@@ -37,11 +40,22 @@
 
 	// fix len toString
 	Number.prototype.toStr=Number.prototype.toString;
-	Number.prototype.toString=function(n,len){
-		len!=undefined || (len=1);
-		n!=undefined || (n=10);
-		var str = this.toStr(n);
-		while(str.length<len) str='0'+str;
+	Number.prototype.toString=function(n,len,zap){ // zap : zero after point
+		n   !== undefined || (n   = 10);	
+		len !== undefined || (len = 1); // len befor point
+		zap !== undefined || (zap = 0);
+
+		var str = this.toStr(n),
+		strlen  = str.length,
+		dotpos  = str.indexOf('.');
+		if(dotpos == -1 && zap>0){
+			str += '.';
+			dotpos = strlen;
+			strlen ++;
+		}
+
+		for(var i=strlen-dotpos-1; i<zap; i++) str+='0'; // add zero after
+		for(var i = dotpos; i<len; i++) str='0'+str; // add zero befor
 		return str;
 	}
 
@@ -51,13 +65,30 @@
 	window.isA = function (value) { return value instanceof Array }
 
 	//adv interval
-	window.timeloop = function (fn,fps,that,timerId){
+	window.timeloop = function (fn,fps,fpsreport,that,timerId){
 		!that && (that = this);
-		(isF(fn) && fps>0) && start();
+		fps = fps===undefined ? 40 : Math.round(1000/fps);
+
+		var i = 0, now = Date.now(), last = now, fpsAvrg=0;
+		fpsreport && (fpsreport=fps);
+		var showfps = function(fpsAvrg){
+			console.log('FPS : '+fpsAvrg.toString(10,2,1));
+		};
+
 		function start(){
 			stop();
 			(interval = function(){
 				fn.call(that);
+				if(fpsreport>0){
+					now = Date.now();
+					fpsAvrg = (1000/(now-last)+fpsAvrg)/2;
+					last = now;
+					if(++i>fpsreport){
+						fpsreport = Math.round(fpsAvrg,1);
+						showfps.call(that,fpsreport);
+						i=0
+					}
+				}
 				timerId = setTimeout(interval,fps);
 			})();
 		} this.start = start;
@@ -68,6 +99,12 @@
 			timerId = null;
 			return this;
 		}
+
+		this.onFps = function(fn){
+			showfps = fn;
+		};
+
+		(isF(fn) && fps>0) && start();
 	}
 
 })();

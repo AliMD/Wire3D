@@ -6,6 +6,7 @@
 	<style type="text/css">
 		body{
 			background : #353535;
+			color : #eee;
 		}
 		#canvas3d{
 			position   : absolute;
@@ -22,21 +23,23 @@
 	<script type="text/javascript" src="wire3d.js"></script>
 </head>
 <body>
+	<div id='fps'></div>
 	<canvas id='canvas3d' width="1000" height="600" >
 		Your Browser Sucks :tr
 	</canvas>
 	<script type="text/javascript">
 		var gh       = 120,
-			alpha    = 0.5,
+			alpha    = 0.6,
 			defStyle = {
-			lineWidth : 2,
+			lineWidth : 0,
 			strokeStyle : 'rgba(250,250,250,0.6)',
 			fillStyle : 'rgba(250,250,250,'+alpha+')'
 		};
 
 		(w3d=new wire3d({
-			dof : 900,
-			canvas : 'canvas3d'
+			dof    : 900,
+			canvas : 'canvas3d',
+			wallhk : true
 		})).addPoints([
 			[ gh,-gh, gh],
 			[ gh, gh, gh],
@@ -62,9 +65,13 @@
 			{p:[4, 7, 0, 3],s:5}
 		]);
 		
-		tl = new timeloop(function(){
+		var tl = new timeloop(function(){
 			w3d.rotate({x:1,y:2}).render();
-		},40);
+		},500,true);
+
+		tl.onFps(function(fps){
+			document.getElementById('fps').innerHTML = 'FPS : '+fps.toString(10,2,1);
+		});
 
 	</script>
 </body>
