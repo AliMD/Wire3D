@@ -6,6 +6,8 @@
 
 (function(_root){
 
-	
+	_root.wire3d = function(canvas){
+
+	}
 
 })(window)

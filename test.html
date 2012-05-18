@@ -23,7 +23,10 @@
 	<canvas id='cnv' width="1000" height="600" />
 	<script type="text/javascript" src="wire3d.js"></script>
 	<script type="text/javascript">
-		
+		var w3d = new wire3d('cnv');
+		wire3d.loadObj('cube');
+		wire3d.rotate(20,10);
+		wire3d.render();
 	</script>
 </body>
 </html>
