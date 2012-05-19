@@ -1,6 +1,7 @@
 /*
 	Ali.MD Wire3D v1
 	As Simple as Possible Pure Native Javascript 3D Rotation.
+	Fork me : ali.md/wire3d
 	by Ali Mihandoost - i@ali.md
 */
 
@@ -67,6 +68,21 @@
 				}.extend(s));
 			}); return this;
 		} this.addStyles = addStyles;
+
+		function resetStyle (fn){
+			isF(fn) || (fn=function(){
+				return {
+					lineWidth : 1,
+					strokeStyle : 'rgb(0,0,0,0.9)',
+					fillStyle : 'rgba(50,50,200,0.7)'
+				};
+			});
+			styles.length = 0;
+			faces.forEach(function(f){
+				addStyles(fn.call(this,f));
+				f.s = styles.length-1;
+			});
+		} this.resetStyle = resetStyle;
 
 		function addFaces (f){ // addFaces([{p:[0,1,2],s:1},{p:[1,2,0],s:1}]);
 			( isA(f) && ( isO(f[0]) || isA(f[0]) ) ) || (f = [f]); // addFace({p:[0,1,2],s:1})
