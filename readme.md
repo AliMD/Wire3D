@@ -3,4 +3,4 @@
 
 This branch contain original files from 2005, only for archive and keep in my history.
 
-**Please check Object3D branch.**
+**Switch to Object3D.as branch.**
