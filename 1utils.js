@@ -98,7 +98,7 @@
 			clearTimeout(timerId);
 			timerId = null;
 			return this;
-		}
+		} this.stop = stop;
 
 		this.onFps = function(fn){
 			showfps = fn;
