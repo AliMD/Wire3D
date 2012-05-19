@@ -65,11 +65,11 @@
 	window.isA = function (value) { return value instanceof Array }
 
 	//adv interval
-	window.timeloop = function (fn,fps,fpsreport,that,timerId){
+	window.timeloop = function (fn,fps,fpscheck,that,timerId){
 		!that && (that = this);
-		fps = fps===undefined ? 40 : Math.round(1000/fps);
+		(fps===undefined || fps>1000) && (fps = 40);
 
-		var i = 0, now = Date.now(), last = now;
+		var targetFps = fps, delay = Math.floor(1000/fps), i = 0, now = Date.now(), last = now;
 		var showfps = function(fps){
 			console.log('FPS : '+fps.toString(10,2,1));
 		};
@@ -78,15 +78,18 @@
 			stop();
 			(interval = function(){
 				fn.call(that);
-				if(fpsreport){
+				if(fpscheck){
 					i++;
 					now = Date.now();
 					if(now-last >= 1000){
-						showfps.call(that,i);
+						
+						fps<1000 && ( fps += (targetFps<i?-1:1)*(Math.abs(targetFps-i)<5?0.5:4) );
+						delay = Math.floor(1000/fps);
+						showfps.call(that,i,fps);
 						i = 0; last = now;
 					}
 				}
-				timerId = setTimeout(interval,fps);
+				timerId = setTimeout(interval,delay);
 			})();
 		} this.start = start;
 

@@ -27,15 +27,20 @@
 			styles = config.data.styles,
 			faces  = config.data.faces,
 			cnv    = document.getElementById(config.canvas),
+			mospos = {},
 			stage  = {
 				width   : cnv.width,
 				height  : cnv.height,
 				context : cnv.getContext('2d')
-			}; this.stage = stage;
+			};
 
-			config.center.x=='c' && (config.center.x=stage.width/2);
-			config.center.y=='c' && (config.center.y=stage.height/2);
+		this.stage = stage;
+		this.mousePos = mospos;
 
+		config.center.x=='c' && (config.center.x=stage.width/2);
+		config.center.y=='c' && (config.center.y=stage.height/2);
+		mospos.extend(config.center);
+			
 		//core funcs
 		function log (){
 			console.log('Ali.MD Wire3D v1 beta :tr', config, stage); // change me if you dont like :troll
@@ -142,12 +147,24 @@
 		} this.rotate = rotate;
 
 		function rotateTo(p, sp) {
-			sp = sp===undefined ? 0.001 : sp/1000;
+			sp = sp===undefined ? 0.01 : sp/100;
+			p={}.extend(config.center,p);
 			rotate({
-				x:config.stage.center.y-p.y,
-				y:p.x-config.stage.center.x
-			});
+				x : (config.center.y-p.y)*sp,
+				y : (p.x-config.center.x)*sp
+			}); return this;
 		} this.rotateTo = rotateTo;
+
+		function rotateToMouse (sp){
+			rotateTo(mospos,sp); return this;
+		} this.rotateToMouse=rotateToMouse;
+
+		cnv.onmousemove=function(evt){
+			mospos.extend({
+				x: evt['offsetX'] ? evt.offsetX : evt.layerX,
+				y: evt['offsetY'] ? evt.offsetY : evt.layerY
+			});
+		};
 	}
 })(window);
 
