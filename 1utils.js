@@ -55,7 +55,7 @@
 		}
 
 		for(var i=strlen-dotpos-1; i<zap; i++) str+='0'; // add zero after
-		for(var i = dotpos; i<len; i++) str='0'+str; // add zero befor
+		for(var i = dotpos!=-1?dotpos:0; i<len-strlen; i++) str='0'+str; // add zero befor
 		return str;
 	}
 
